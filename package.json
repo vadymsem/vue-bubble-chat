@@ -11,6 +11,14 @@
     "dist/*"
   ],
   "author": "Vadym Semenets <vadym.sem18@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vadymsem/vue-bubble-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vadymsem/vue-bubble-chat/issues"
+  },
+  "homepage": "https://github.com/vadymsem/vue-bubble-chat#readme",
   "license": "ISC",
   "devDependencies": {
     "bili": "^4.8.1",

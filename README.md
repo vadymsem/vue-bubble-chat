@@ -87,7 +87,7 @@ Vue.use(BubbleChat);
 
 ### One more thing
 -----------------------------------------------------------------------
-To have an opportunity of identification own messages, you can add one more key to *messagesList* named *isMine* which should be Boolean. It will make that message in chat with light blue background and left aligned.
+To have an opportunity of identification own messages, you can add one more key to *messagesList* object named *isMine* which should be Boolean. It will make that message in chat with light blue background and left aligned.
 
 Enjoy!
 
