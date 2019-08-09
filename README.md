@@ -32,8 +32,7 @@ Vue.use(BubbleChat);
 
 | Event name  | Data | Description
 | ------------- | ------------- |------------- |
-| onMessageSent  | object:  {message: '*text here*'}  |  return a message which just was sent from chat textarea
-| onMessageReceive  | object:  {message: '*text here*'}  |  return an array with all chat messages
+| chatWasUpdated  | object:  {chatState: [{...}, {...}, ...]}  |  return a an object with chatState key where will be stored full messages array
 
 -----------------------------------------------------------------------
 
