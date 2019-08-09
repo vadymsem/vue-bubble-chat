@@ -18,38 +18,22 @@ Vue.use(BubbleChat);
 ```
 
 -----------------------------------------------------------------------
-### Params
-**:position** - { type: string, default: 'right' }
+### @ Params
 
-*horizontal position on your page, receives 'left' or 'right' values*
+| Param name  | Data | Description |
+| ------------- | ------------- |------------- |
+| position  | type: string, default: 'right'  | horizontal position on your page, receives 'left' or 'right' values  |
+| messages  | type: array, default: [ ] | objects array with all your chat messages  |
+| text-field  | type: string  | name of key which is equel to your message  |
+| sender-name-field  |  type: string  | name of key which is equel to user's name  |
+| avatar-link-field  | type: string  | name of key which is equel to user's avatar link; by default it will be simple circle with the first letter of user's name  |
 
-**:messages** - { type: array, default: [] }
+### @ Events
 
-*objects array with all your chat messages*
-
-**:text-field** - { type: string }
-
-*name of key which is equel to your message*
-
-**:sender-name-field** - { type: string }
-
-*name of key which is equel to user's name*
-
-**:avatar-link-field** - { type: string }
-
-*name of key which is equel to user's avatar link; by default it will be simple circle with the first letter of user's name*
-
------------------------------------------------------------------------
-
-### Events
-
-**@onMessageSent**
-
-*return an message which just was sent from chat textarea*
-
-**@onMessageReceive**
-
-*return an object like {messages: /here all array of the chat messages/}*
+| Event name  | Data | Description
+| ------------- | ------------- |------------- |
+| onMessageSent  | object:  {message: '*text here*'}  |  return a message which just was sent from chat textarea
+| onMessageReceive  | object:  {message: '*text here*'}  |  return an array with all chat messages
 
 -----------------------------------------------------------------------
 
@@ -84,10 +68,6 @@ Vue.use(BubbleChat);
 ...
 <script>
 ```
-
-### One more thing
------------------------------------------------------------------------
-To have an opportunity of identification own messages, you can add one more key to *messagesList* object named *isMine* which should be Boolean. It will make that message in chat with light blue background and left aligned.
 
 Enjoy!
 

@@ -18,7 +18,9 @@
                 :src="msgItem[avatarLinkField]"
                 :alt="msgItem[senderNameField]"
               />
-              <span v-if="!msgItem[avatarLinkField]">{{msgItem[senderNameField].charAt(0).toUpperCase()}}</span>
+              <span v-if="!msgItem[avatarLinkField]">
+                  {{msgItem[senderNameField] ? msgItem[senderNameField].charAt(0).toUpperCase() : '?' }}
+                </span>
             </div>
             <div class="messages_list__item___message">
               <span class="name">{{msgItem[senderNameField]}}</span>
@@ -33,9 +35,11 @@
       <div class="bubble_chat_wrapper__rolled_down" v-show="windowMode">
         <div class="bubble_chat_wrapper__rolled_down__list" ref="scrollWrapper">
           <div class="scroll">
-            <div v-for="(msgObj, index) in messages" :key="index" :class="{'mine': msgObj.isMine}">
+            <div v-for="(msgObj, index) in fullMesagesList" :key="index" :class="{'mine': msgObj.isMine}">
                 <img v-if="msgObj[avatarLinkField]" :src="msgObj[avatarLinkField]" alt="avatar" />
-                <span class="no_image" v-if="!msgObj[avatarLinkField]">{{msgObj[senderNameField].charAt(0).toUpperCase()}}</span>
+                <span class="no_image" v-if="!msgObj[avatarLinkField]">
+                    {{msgObj[senderNameField] ? msgObj[senderNameField].charAt(0).toUpperCase() : '?' }}
+                </span>
                 <span class="name">{{msgObj[senderNameField]}}</span>
                 <span class="msg">{{msgObj[textField]}}</span>
             </div>
@@ -164,25 +168,32 @@ export default {
     },
     avatarLinkField: {
       type: String
-    },
+    }
   },
   data() {
     return {
       messageUpdating: false,
       windowMode: false,
       newMessageText: '',
+      fullMesagesList: [],
     };
   },
   computed: {
     activeMessages() {
-      return this.$props.messages.length > 3
-        ? this.$props.messages.slice(Math.max(this.$props.messages.length - 3, 1)).reverse()
-        : this.$props.messages.reverse()
+      return this.fullMesagesList.length > 3
+        ? this.fullMesagesList.slice(Math.max(this.fullMesagesList.length - 3, 1)).reverse()
+        : this.fullMesagesList.reverse()
     }
   },
   methods: {
     sendMessage() {
-        this.$emit('onMessageSent', {message: this.newMessageText})
+        let msg = Object.assign({}, {
+                isMine: true, 
+                [this.$props.textField]: this.newMessageText, 
+                [this.$props.senderNameField]: 'ME'
+            }
+        )
+        this.fullMesagesList.push(msg)
         this.newMessageText = ''
     },
     scrollDownChat() {
@@ -197,13 +208,16 @@ export default {
       this.scrollDownChat()
     }
   },
+  created() {
+    this.fullMesagesList = this.$props.messages;
+  },
   watch: {
-    'messages': function(e) {
+    'fullMesagesList': function(e) {
       this.messageUpdating = true;
       setTimeout(() => {
         this.messageUpdating = false;
       }, 200);
-      this.$emit('onMessageReceive', {messages: this.$props.messages})
+      this.$emit('chatWasUpdated', {chatState: this.fullMesagesList })
       this.scrollDownChat()
     }
   },
@@ -211,11 +225,6 @@ export default {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap");
-
-* {
-  font-family: "Roboto", sans-serif;
-}
 
 .slide {
   -webkit-backface-visibility: hidden;
@@ -415,7 +424,7 @@ body {
   bottom: 0;
   overflow: hidden;
 }
-.bubble_chat_wrapper .bubble_chat_wrapper__rolled_up .messages_list__item:before {
+.bubble_chat_wrapper .bubble_chat_wrapper__rolled_up .messages_list__item::before {
     content: '';
     position: absolute;
     width: 100%;
@@ -605,7 +614,7 @@ body {
   .bubble_chat_wrapper__rolled_up
   .messages_list__item
   .messages_list__item___message
-  span.name:after {
+  span.name::after {
   content: "";
   position: absolute;
   width: 100%;
@@ -697,8 +706,8 @@ body {
   .bubble_chat_wrapper__rolled_down__list .scroll > div {
     border-radius: 10px;
     width: 90%;
-    -webkit-box-shadow: 0 0 11px 0px rgba(0,0,0,.25);
-            box-shadow: 0 0 11px 0px rgba(0,0,0,.25);
+    -webkit-box-shadow: 0 0 11px 0px rgba(0,0,0,.1);
+            box-shadow: 0 0 11px 0px rgba(0,0,0,.1);
     padding: 10px;
     margin: 8px 0;
     display: -webkit-box;
@@ -761,6 +770,9 @@ body {
       font-size: 13px;
       color: #2c2c3e;
       letter-spacing: .3px;
+      white-space: pre-line;
+      width: 100%;
+      text-align: left;
   }
 
 .bubble_chat_wrapper
