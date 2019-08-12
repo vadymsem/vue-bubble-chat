@@ -7,7 +7,7 @@
             class="messages_list__item"
             v-for="(msgItem, index) in activeMessages"
             @click="openChat"
-            :key="msgItem.id ? msgItem.id : msgItem._id ? msgItem._id : index"
+            :key="index + '_bubbles'"
             :class="{'hiding-out': index === 0 && messageUpdating, 
                         'showing-in' : index === 2 && messageUpdating,
                         'shake-it': index === 1 && messageUpdating}"
@@ -56,6 +56,7 @@
     </transition>
 
     <div class="bubble_chat_wrapper__control" @click="openChat">
+      <span class="new_mesages" v-show="!windowMode && unredMessagesCount > 0">{{unredMessagesCount}}</span>
       <svg
         v-if="!windowMode"
         xmlns="http://www.w3.org/2000/svg"
@@ -146,6 +147,7 @@
 </template>
 
 <script>
+import { setTimeout } from 'timers';
 export default {
   name: "BubbleChat",
   props: {
@@ -176,21 +178,30 @@ export default {
       windowMode: false,
       newMessageText: '',
       fullMesagesList: [],
+      checkedMessages: 0
     };
   },
   computed: {
+    notMineMessages() {
+      return this.fullMesagesList.filter((msg) => !msg.isMine).length
+    },
+    unredMessagesCount() {
+      return this.notMineMessages - this.checkedMessages
+    },
     activeMessages() {
+      if (this.windowMode) return
+
       return this.fullMesagesList.length > 3
-        ? this.fullMesagesList.slice(Math.max(this.fullMesagesList.length - 3, 1)).reverse()
-        : this.fullMesagesList.reverse()
+        ? [...this.fullMesagesList.slice(Math.max(this.fullMesagesList.length - 3, 1))].reverse()
+        : [...this.fullMesagesList].reverse()
     }
   },
   methods: {
     sendMessage() {
-        let msg = Object.assign({}, {
-                isMine: true, 
+        const msg = Object.assign({}, {
+                isMine: true,
                 [this.$props.textField]: this.newMessageText, 
-                [this.$props.senderNameField]: 'ME'
+                [this.$props.senderNameField]: 'me'
             }
         )
         this.fullMesagesList.push(msg)
@@ -204,6 +215,7 @@ export default {
         }
     },
     openChat() {
+      this.checkedMessages = this.notMineMessages
       this.windowMode = !this.windowMode;
       this.scrollDownChat()
     }
@@ -214,10 +226,10 @@ export default {
   watch: {
     'fullMesagesList': function(e) {
       this.messageUpdating = true;
+      this.$emit('chatWasUpdated', {chatState: this.fullMesagesList })
       setTimeout(() => {
         this.messageUpdating = false;
       }, 200);
-      this.$emit('chatWasUpdated', {chatState: this.fullMesagesList })
       this.scrollDownChat()
     }
   },
@@ -413,8 +425,8 @@ body {
   max-width: 100%;
   border-radius: 10px;
   background-color: #fff;
-  -webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 20px rgba(208, 208, 208, 0.3);    
+  box-shadow: 0 0 20px rgba(208, 208, 208, 0.3);
   height: 100px;
   -webkit-transition: 0.2s;
   -o-transition: 0.2s;
@@ -470,8 +482,8 @@ body {
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_up
   .messages_list__item:hover {
-  -webkit-box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+  -webkit-box-shadow: 0 0 20px rgba(208, 208, 208, 0.8);    
+  box-shadow: 0 0 20px rgba(208, 208, 208, 0.8);
   -webkit-transition: 0.2s;
   -o-transition: 0.2s;
   transition: 0.2s;
@@ -537,7 +549,7 @@ body {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #79a3bd;
+  background-color: #98afea;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -602,7 +614,6 @@ body {
   width: 100%;
   text-align: right;
   padding-right: 10px;
-  /* border-bottom: 1px solid #ececec; */
   margin-bottom: 2px;
   padding-bottom: 5px;
   letter-spacing: 0.6px;
@@ -621,8 +632,8 @@ body {
   bottom: 0;
   right: 0;
   height: 1px;
-  background-image: -o-linear-gradient(45deg, transparent, #16527d);
-  background-image: linear-gradient(45deg, transparent, #16527d);
+  background-image: -o-linear-gradient(45deg, transparent, #e2e2e2);
+  background-image: linear-gradient(45deg, transparent, #e2e2e2);
 }
 
 .bubble_chat_wrapper
@@ -683,6 +694,10 @@ body {
       -ms-flex-align: end;
           align-items: flex-end;
   padding-right: 15px;
+      min-height: 100%;
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+            justify-content: flex-end;
 }
 
 .bubble_chat_wrapper
@@ -706,8 +721,8 @@ body {
   .bubble_chat_wrapper__rolled_down__list .scroll > div {
     border-radius: 10px;
     width: 90%;
-    -webkit-box-shadow: 0 0 11px 0px rgba(0,0,0,.1);
-            box-shadow: 0 0 11px 0px rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 0 3px 0px rgba(0,0,0,.3);
+            box-shadow: 0 0 3px 0px rgba(0,0,0,.3);
     padding: 10px;
     margin: 8px 0;
     display: -webkit-box;
@@ -733,9 +748,11 @@ body {
   .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > img,
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > span.no_image  {
-    right: -25px;
-    left: auto;
+  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > span.no_image,
+.bubble_chat_wrapper
+  .bubble_chat_wrapper__rolled_down
+  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > span.name  {
+    display: none;
   }
 
 .bubble_chat_wrapper
@@ -783,6 +800,7 @@ body {
     text-transform: capitalize;
     color: #696969;
     margin-bottom: 5px;
+    text-align: left;
   }
 
 .bubble_chat_wrapper
@@ -819,6 +837,23 @@ body {
   -webkit-transition: 0.4s;
   -o-transition: 0.4s;
   transition: 0.4s;
+  position: relative;
+}
+.bubble_chat_wrapper .bubble_chat_wrapper__control span.new_mesages {
+  position: absolute;
+    width: 20px;
+    height: 20px;
+    display: block;
+    border-radius: 50%;
+    background-color: #e05f1f;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    justify-content: center;
+    left: -5px;
+    top: 0px;
+    z-index: 10;
 }
 .bubble_chat_wrapper .bubble_chat_wrapper__control:hover {
   -webkit-transition: 0.4s;
@@ -826,8 +861,5 @@ body {
   transition: 0.4s;
   -webkit-box-shadow: 0 0 10px rgba(44, 142, 255, 1);
           box-shadow: 0 0 10px rgba(44, 142, 255, 1);
-  -webkit-transform: scale(1.05) rotate(360deg);
-      -ms-transform: scale(1.05) rotate(360deg);
-          transform: scale(1.05) rotate(360deg);
 }
 </style>

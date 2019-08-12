@@ -2,6 +2,13 @@
 
 Amesome & simple vue chat component
 
+<a href="https://https://github.com/vadymsem/vue-bubble-chat" target="\_parent" rel="nofollow">
+  <img alt="" src="https://img.shields.io/github/stars/vadymsem/vue-bubble-chat.svg?style=social&amp;label=Star">
+</a>
+
+![preview](https://media.giphy.com/media/hrSR25LGrBp8lco4tO/giphy.gif)
+
+
 ## Installation
 
 ```bash
@@ -18,7 +25,7 @@ Vue.use(BubbleChat);
 ```
 
 -----------------------------------------------------------------------
-### @ Params
+### Params
 
 | Param name  | Data | Description |
 | ------------- | ------------- |------------- |
@@ -28,7 +35,7 @@ Vue.use(BubbleChat);
 | sender-name-field  |  type: string  | name of key which is equel to user's name  |
 | avatar-link-field  | type: string  | name of key which is equel to user's avatar link; by default it will be simple circle with the first letter of user's name  |
 
-### @ Events
+### Events
 
 | Event name  | Data | Description
 | ------------- | ------------- |------------- |
@@ -57,7 +64,7 @@ Vue.use(BubbleChat);
      messagesList: [
       {
           username: 'John Doe',
-          message: 'Hey guys! How are you?'
+          message: 'Hey guys! How are you?',
           iconUrl: 'https://www.link-to-john-doe-pic.jpg'
       }
      ]
