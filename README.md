@@ -2,7 +2,7 @@
 
 Amesome & simple vue chat component
 
-<a href="https://https://github.com/vadymsem/vue-bubble-chat" target="\_parent" rel="nofollow">
+<a href="https://github.com/vadymsem/vue-bubble-chat" target="\_parent" rel="nofollow">
   <img alt="" src="https://img.shields.io/github/stars/vadymsem/vue-bubble-chat.svg?style=social&amp;label=Star">
 </a>
 

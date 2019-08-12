@@ -147,7 +147,6 @@
 </template>
 
 <script>
-import { setTimeout } from 'timers';
 export default {
   name: "BubbleChat",
   props: {
@@ -210,7 +209,7 @@ export default {
     scrollDownChat() {
         if(this.windowMode) {
             setTimeout(() => {
-            this.$refs.scrollWrapper.scrollTop = this.$refs.scrollWrapper.scrollHeight
+              this.$refs.scrollWrapper.scrollTop = this.$refs.scrollWrapper.scrollHeight
             }, 0)
         }
     },
