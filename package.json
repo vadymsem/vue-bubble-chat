@@ -1,6 +1,6 @@
 {
   "name": "vue-bubble-chat",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Awesome vue chat component",
   "main": "./dist/index.js",
   "scripts": {
