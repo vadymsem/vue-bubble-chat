@@ -36,12 +36,14 @@
         <div class="bubble_chat_wrapper__rolled_down__list" ref="scrollWrapper">
           <div class="scroll">
             <div v-for="(msgObj, index) in fullMesagesList" :key="index" :class="{'mine': msgObj.isMine}">
-                <img v-if="msgObj[avatarLinkField]" :src="msgObj[avatarLinkField]" alt="avatar" />
-                <span class="no_image" v-if="!msgObj[avatarLinkField]">
-                    {{msgObj[senderNameField] ? msgObj[senderNameField].charAt(0).toUpperCase() : '?' }}
-                </span>
-                <span class="name">{{msgObj[senderNameField]}}</span>
-                <span class="msg">{{msgObj[textField]}}</span>
+                <div>
+                    <img v-if="msgObj[avatarLinkField]" :src="msgObj[avatarLinkField]" alt="avatar" />
+                    <span class="no_image" v-if="!msgObj[avatarLinkField]">
+                        {{msgObj[senderNameField] ? msgObj[senderNameField].charAt(0).toUpperCase() : '?' }}
+                    </span>
+                    <span class="name">{{msgObj[senderNameField]}}</span>
+                    <span class="msg">{{msgObj[textField]}}</span>
+                </div>
             </div>
           </div>
         </div>
@@ -143,6 +145,7 @@
         <g />
       </svg>
     </div>
+
   </div>
 </template>
 
@@ -210,7 +213,7 @@ export default {
         if(this.windowMode) {
             setTimeout(() => {
               this.$refs.scrollWrapper.scrollTop = this.$refs.scrollWrapper.scrollHeight
-            }, 0)
+            }, 100)
         }
     },
     openChat() {
@@ -236,6 +239,35 @@ export default {
 </script>
 
 <style>
+
+@-webkit-keyframes bubble-show-up {
+    from {
+        -webkit-transform: translate(100%, 100%);
+                transform: translate(100%, 100%);
+        opacity: 0;
+    }
+
+    to {
+        -webkit-transform: translate(0%, 0%);
+                transform: translate(0%, 0%);
+        opacity: 1;
+    }
+}
+@keyframes bubble-show-up {
+    from {
+        -webkit-transform: translate(100%, 100%);
+                transform: translate(100%, 100%);
+        opacity: 0;
+    }
+
+    to {
+        -webkit-transform: translate(0%, 0%);
+                transform: translate(0%, 0%);
+        opacity: 1;
+    }
+}
+
+
 
 .slide {
   -webkit-backface-visibility: hidden;
@@ -732,6 +764,8 @@ body {
         -ms-flex-direction: column;
             flex-direction: column;
     position: relative;
+    -webkit-animation: .2s bubble-show-up ease-in-out;
+        animation: .2s bubble-show-up ease-in-out;
   }
 
 .bubble_chat_wrapper
@@ -744,22 +778,39 @@ body {
 
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > img,
+  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine img,
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > span.no_image,
+  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine span.no_image,
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine > span.name  {
+  .bubble_chat_wrapper__rolled_down__list .scroll > div.mine span.name  {
     display: none;
+  }
+
+  .bubble_chat_wrapper
+  .bubble_chat_wrapper__rolled_down
+  .bubble_chat_wrapper__rolled_down__list .scroll > div > div {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+            align-items: flex-start;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div > img,
+  .bubble_chat_wrapper__rolled_down__list .scroll > div img,
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div > span.no_image {
+  .bubble_chat_wrapper__rolled_down__list .scroll > div span.no_image {
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -782,18 +833,20 @@ body {
 
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div > span.msg {
+  .bubble_chat_wrapper__rolled_down__list .scroll > div span.msg {
       font-size: 13px;
       color: #2c2c3e;
       letter-spacing: .3px;
       white-space: pre-line;
       width: 100%;
       text-align: left;
-  }
+      overflow: hidden;
+      text-overflow: ellipsis;
+ }
 
 .bubble_chat_wrapper
   .bubble_chat_wrapper__rolled_down
-  .bubble_chat_wrapper__rolled_down__list .scroll > div > span.name {
+  .bubble_chat_wrapper__rolled_down__list .scroll > div span.name {
     font-size: 13px;
     font-weight: 500;
     text-transform: capitalize;

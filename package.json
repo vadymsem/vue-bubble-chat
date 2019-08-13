@@ -15,6 +15,7 @@
     "type": "git",
     "url": "git+https://github.com/vadymsem/vue-bubble-chat.git"
   },
+  "keywords": ["vue", "vue-chat", "vue-component", "chat", "chat-ui", "websocket-chat", "vue-bubble", "vue-bubble-chat"],
   "bugs": {
     "url": "https://github.com/vadymsem/vue-bubble-chat/issues"
   },
